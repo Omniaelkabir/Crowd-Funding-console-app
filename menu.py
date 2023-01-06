@@ -14,7 +14,7 @@ def print_menu():
     5. Search for a project by date
     0. QUIT""")
 
-import time
+import datetime
 import projectSDK
 import register
 import login
@@ -51,7 +51,7 @@ def menu_true():
             print("Start Time?")
             start_time = input("Start Date (yyy/mm/dd) : ")
             try:
-                start_time = time.strptime(start_time, '%Y/%m/%d')
+                start_time = datetime.datetime.strptime(start_time, '%Y/%m/%d')
                 print("vaild done ")
             except:   
                 print("Not vaild") 
@@ -60,7 +60,7 @@ def menu_true():
             print("End Time?")
             end_time = input("End Date (mm/dd/yyyy) : ")
             try:
-                end_time = time.strptime(end_time, '%Y/%m/%d')
+                end_time = datetime.datetime.strptime(end_time, '%Y/%m/%d')
                 print("vaild done ")
             except:   
                 print("Not vaild") 
@@ -74,14 +74,16 @@ def menu_true():
                 print("Not Vaild ")
                 print("enter Title again")
                 title = input()
-            try:    
-                project_delete= projectSDK.get_project_by_title(title)  
-                projectSDK.delete_project(project_delete)
-            except:
-                print("project not found") 
-                print("enter Title project again")
-                title = input() 
-                projectSDK.delete_project(projectSDK.get_project_by_title(title))
+            while True:    
+                try:   
+                    project_delete= projectSDK.get_project_by_title(title) 
+                    # print(project_delete) 
+                    projectSDK.delete_project(project_delete)
+                    break
+                except:
+                    print("project not found") 
+                    print("enter Title project again")
+                    title = input() 
 
         elif response == 4:
             print("Current title?")
@@ -101,7 +103,7 @@ def menu_true():
             print("Current Start Time?")
             current_start_time = input("Start Date (yyy/mm/dd) : ")
             try:
-                cuurent_start_time = time.strptime(current_start_time, '%Y/%m/%d')
+                cuurent_start_time = datetime.datetime.strptime(current_start_time, '%Y/%m/%d')
                 print("vaild done ")
             except:   
                 print("Not vaild") 
@@ -110,7 +112,7 @@ def menu_true():
             print("Current End Time?")
             current_end_time = input("End Date (yyy/mm/dd) : ")
             try:
-                cuurent_end_time = time.strptime(current_end_time, '%Y/%m/%d')
+                cuurent_end_time = datetime.datetime.strptime(current_end_time, '%Y/%m/%d')
                 print("vaild done ")
             except:   
                 print("Not vaild") 
@@ -141,10 +143,11 @@ def menu_true():
             print("Start Time?")
             start_time = input("Start Date (yyy/mm/dd) : ")
             try:
-                start_time = time.strptime(start_time, '%Y/%m/%d')
+                start_time = datetime.datetime.strptime(start_time, '%Y/%m/%d')
                 print("vaild done ")
                 try:
-                    projectSDK.get_project_by_date(start_time)
+                    find_date= projectSDK.get_project_by_date(start_time)
+                    print(find_date)
                 except:
                     print("Date not found")
             except:   

@@ -13,7 +13,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS projects
              (title TEXT, details TEXT, total_target INTEGER , start_time DATE, end_time DATE )''')
 
 def cursor():
-    
+    #https://stackoverflow.com/questions/14511337/efficiency-of-reopening-sqlite-database-after-each-query/14520670  
     l = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
     return sqlite3.connect(os.path.join(l, 'projects.db')).cursor()
@@ -24,6 +24,7 @@ def add_project(project):
         c.execute("INSERT INTO projects VALUES (?, ?, ?, ?, ?)", (project.title, project.details, project.total_target, project.start_time, project.end_time))
     c.connection.close() 
     return c.lastrowid
+
 
 def get_project_by_title(title):
     c = cursor()
@@ -37,9 +38,9 @@ def get_project_by_title(title):
     return Project(data[0], data[1], data[2], data[3], data[4])
 
 
-def get_project_by_date(start_time, end_time):
+def get_project_by_date(start_time):
     c = cursor()
-    c.execute('SELECT * FROM projects WHERE start_time=?', (start_time))
+    c.execute('SELECT * FROM projects WHERE start_time=?', (start_time,))
     data = c.fetchone()
     c.connection.close()
 
@@ -56,11 +57,11 @@ def get_projects():
     c.connection.close()
     return projects
 
-def update_prokject(project, new_title, new_details, new_total_target, new_start_time, new_end_time):
+def update_project(project, new_title, new_details, new_total_target, new_start_time, new_end_time):
     c = cursor()
     with c.connection: #don't forget this part.
-        c.execute('UPDATE project SET title=?, detils=?, total_target=?, start_time=?, end_time=? WHERE title=? AND details=? AND total_target=? AND start_time=? AND end_time=?', 
-        (new_title, new_details,new_total_target,new_start_time,new_end_time, project.title, project.details, project.total_target, project.start_time, project.end_time))
+        c.execute('UPDATE projects SET title=?, details=?, total_target=?, start_time=?, end_time=? WHERE title=? AND details=? AND total_target=? AND start_time=? AND end_time=?', 
+        (new_title, new_details, new_total_target, new_start_time, new_end_time, project.title, project.details, project.total_target, project.start_time, project.end_time))
     project = get_project_by_title(project.title) #after commit
     c.connection.close()
     return project
@@ -68,7 +69,7 @@ def update_prokject(project, new_title, new_details, new_total_target, new_start
 def delete_project(project):
     c = cursor()
     with c.connection:
-        c.execute('DELETE FROM projects WHERE title=?', (project.title))
+        c.execute('DELETE FROM projects WHERE title=?', (project.title,))
     rows = c.rowcount
     c.connection.close()
     return rows
