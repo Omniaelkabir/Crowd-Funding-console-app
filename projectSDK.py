@@ -13,7 +13,6 @@ c.execute('''CREATE TABLE IF NOT EXISTS projects
              (title TEXT, details TEXT, total_target INTEGER , start_time DATE, end_time DATE )''')
 
 def cursor():
-    #https://stackoverflow.com/questions/14511337/efficiency-of-reopening-sqlite-database-after-each-query/14520670  
     l = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
     return sqlite3.connect(os.path.join(l, 'projects.db')).cursor()
